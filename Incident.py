@@ -3,8 +3,8 @@ from sqlite3 import Error
 import inquirer
 
 class Incident:
-    def __init__(self, incident_id, description, priority, status, required_resources=None, assigned_resources=None):
-        self.incident_id = incident_id
+    def __init__(self,  description, priority, status,incident_id = None, required_resources=None, assigned_resources=None):
+        self.incident_id = incident_id # This will be auto-incremented by the database
         self.priority = priority
         self.required_resources = required_resources if required_resources is not None else []
         self.assigned_resources = assigned_resources if assigned_resources is not None else []
@@ -12,7 +12,7 @@ class Incident:
         self.status = status
 
     @staticmethod
-    def prompt_incident_data():
+    def prompt_incident_data(conn):
         # Get all locations from the database
 
         questions = [
@@ -22,7 +22,16 @@ class Incident:
             inquirer.List('status', message="Select incident status", choices=['Open', 'In Progress', 'Resolved'])
         ]
         answers = inquirer.prompt(questions)
-        return answers
+        # Create a new incident object with the provided data
+        incident = Incident(
+            incident_id=None,  # This will be auto-incremented by the database
+            description=answers['description'],
+            priority=answers['priority'],
+            status=answers['status']
+        )
+        # Insert the incident into the database
+        incident.create_incident(conn)
+        print(f"Incident created with ID: {incident.incident_id}")
 
 
     def create_incident(self, conn):
