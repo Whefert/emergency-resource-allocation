@@ -1,6 +1,6 @@
+from database import create_connection
 import sqlite3
 from sqlite3 import Error
-from functions import create_connection
 
 conn = create_connection('incident_management.db')
 

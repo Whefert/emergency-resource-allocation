@@ -1,7 +1,7 @@
 import sqlite3
 from sqlite3 import Error
 import inquirer
-from Controller.IncidentController import create_incident
+from Controller.IncidentController import create_incident_in_db
 
 class Incident:
     def __init__(self, description, priority, status,incident_id = None, required_resources=None, assigned_resources=None):
@@ -31,7 +31,7 @@ class Incident:
             status=answers['status']
         )
         # Insert the incident into the database and get the incident ID
-        incident.set_incident_id(create_incident(incident, conn))
+        incident.set_incident_id(create_incident_in_db(incident))
         print(f"Incident created with ID: {incident.get_incident_id()}")
 
    
@@ -61,7 +61,6 @@ class Incident:
         self.required_resources = required_resources
     def get_required_resources(self):
         return self.required_resources
-
 
     def __repr__(self):
         return f"Incident({self.incident_id}, {self.description}, {self.status})"
