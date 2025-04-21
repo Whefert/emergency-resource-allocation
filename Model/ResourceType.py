@@ -2,8 +2,8 @@ class ResourceType:
     """
     Represents a resource type in the system.
     """
-    def __init__(self, name: str, description: str, type_id:int = None):
-        self.type_id = type_id
+    def __init__(self, name: str, description: str, resource_type_id:int = None):
+        self.resource_type_id = resource_type_id
         self.name = name
         self.description = description
 
@@ -19,6 +19,10 @@ class ResourceType:
     
     def set_description(self, description: str):
         self.description = description
+
+
+    def get_resource_type_id(self):
+        return self.resource_type_id
 
     def __repr__(self):
         return f"ResourceType(name={self.name}, description={self.description})"

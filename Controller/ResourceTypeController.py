@@ -6,13 +6,17 @@ conn = create_connection('incident_management.db')
 
 def create_resource_type_in_db(resource_type):
     try:
-        sql = '''INSERT INTO resource_types(resource_type_id, name, description) VALUES(?, ?, ?)'''
+        sql = '''INSERT INTO resource_type(resource_type_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (resource_type.get_resource_type_id(), resource_type.get_name(), resource_type.get_description()))
         conn.commit()
         return cur.lastrowid  # Return the ID of the newly created resource type
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def delete_resource_type_in_db(resource_type_id):
     try:
@@ -22,6 +26,11 @@ def delete_resource_type_in_db(resource_type_id):
         conn.commit()
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
+        
 
 def update_resource_type_in_db(resource_type):
     try:
@@ -31,6 +40,10 @@ def update_resource_type_in_db(resource_type):
         conn.commit()
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def get_resource_type_by_id(resource_type_id):
     try:
@@ -41,7 +54,10 @@ def get_resource_type_by_id(resource_type_id):
         return rows
     except Error as e:
         print(e)
-    return None 
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def get_all_resource_types():
     try:
@@ -52,5 +68,8 @@ def get_all_resource_types():
         return rows
     except Error as e:
         print(e)
-    return None
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
