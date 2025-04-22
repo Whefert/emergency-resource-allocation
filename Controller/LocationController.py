@@ -1,40 +1,55 @@
-import sqlite3
 from sqlite3 import Error
 from database import create_connection
 
 
-conn = create_connection('incident_management.db')
 
-def create_location_in_db(location):
+
+def create_location(location):
     try:
-        sql = '''INSERT INTO locations(location_id, name, description) VALUES(?, ?, ?)'''
+        conn = create_connection('incident_management.db')
+        sql = '''INSERT INTO location(location_id, zone, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?)'''
         cur = conn.cursor()
-        cur.execute(sql, (location.get_location_id(), location.get_name(), location.get_description()))
+        cur.execute(sql, (location.get_location_id(), location.get_zone(), location.get_x_coordinate(), location.get_y_coordinate()))   
         conn.commit()
-        return cur.lastrowid  # Return the ID of the newly created location
+        # return cur.lastrowid  # Return the ID of the newly created location
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def delete_location_in_db(location_id):
     try:
+        conn = create_connection('incident_management.db')
         sql = '''DELETE FROM locations WHERE location_id=?'''
         cur = conn.cursor()
         cur.execute(sql, (location_id,))
         conn.commit()
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def update_location_in_db(location):
     try:
-        sql = '''UPDATE locations SET name=?, description=? WHERE location_id=?'''
+        conn = create_connection('incident_management.db')
+        sql = '''UPDATE locations SET zone=?, x_coordinate=?, y_coordinate=? WHERE location_id=?'''
         cur = conn.cursor()
-        cur.execute(sql, (location.get_name(), location.get_description(), location.get_location_id()))
+        cur.execute(sql, (location.get_zone(), location.get_x_coordinate(), location.get_y_coordinate(), location.get_location_id()))
         conn.commit()
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def get_location_by_id(location_id):
     try:
+        conn = create_connection('incident_management.db')
         sql = '''SELECT * FROM locations WHERE location_id=?'''
         cur = conn.cursor()
         cur.execute(sql, (location_id,))
@@ -42,10 +57,14 @@ def get_location_by_id(location_id):
         return rows
     except Error as e:
         print(e)
-    return None
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")
 
 def get_all_locations():
     try:
+        conn = create_connection('incident_management.db')
         sql = '''SELECT * FROM locations'''
         cur = conn.cursor()
         cur.execute(sql)
@@ -53,4 +72,7 @@ def get_all_locations():
         return rows
     except Error as e:
         print(e)
-    return None
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")

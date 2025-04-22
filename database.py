@@ -22,11 +22,12 @@ def create_connection(db_name):
         """
         # Create the location table if it doesn't exist
         create_location_table_sql = """
-        CREATE TABLE IF NOT EXISTS locations (
+        CREATE TABLE IF NOT EXISTS location (
             location_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE,
             zone INTEGER NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            x_coordinate INTEGER NOT NULL,
+            y_coordinate INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
         );
         """
 
@@ -45,8 +46,7 @@ def create_connection(db_name):
             resource_id INTEGER PRIMARY KEY AUTOINCREMENT,
             name TEXT NOT NULL UNIQUE,
             description TEXT,
-            quantity INTEGER NOT NULL,
-  
+            quantity INTEGER NOT NULL
         );
         """
 
@@ -70,26 +70,44 @@ def create_connection(db_name):
         );
         """
 
+        # Create emergency types table if it doesn't exist
+        create_emergency_type_table_sql = """
+        CREATE TABLE IF NOT EXISTS emergency_type (
+            emergency_type_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            description TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+
         conn.execute(create_priority_table_sql)
         print("Property table created or already exists.")
 
         conn.execute(create_resource_type_table_sql) 
+        print("Resource type table created or already exists.")
 
-        conn.execute(create_incident_table_sql)
-        print("Incident table created or already exists.")
+        conn.execute(create_emergency_type_table_sql)
+        print("Emergency type table created or already exists.")
 
         conn.execute(create_location_table_sql)
         print("Location table created or already exists.")
 
-        conn.execute(create_resource_types_table_sql)
-        print("Resource types table created or already exists.")
+        # conn.execute(create_incident_table_sql)
+        # print("Incident table created or already exists.")
 
-        conn.execute(create_resource_table_sql)
-        print("Resources table created or already exists.")     
+        # conn.execute(create_location_table_sql)
+        # print("Location table created or already exists.")
+
+        # conn.execute(create_resource_types_table_sql)
+        # print("Resource types table created or already exists.")
+
+        # conn.execute(create_resource_table_sql)
+        # print("Resources table created or already exists.")     
+
 
         # Close the connection
-        conn.close()
-        print("Connection closed.")
+        # conn.close()
+        # print("Connection closed.")
 
         return conn
     except Error as e:

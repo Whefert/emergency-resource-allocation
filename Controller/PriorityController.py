@@ -3,9 +3,9 @@ from sqlite3 import Error
 from database import create_connection
 
 
-conn = create_connection('incident_management.db')
 
 def create_priority(priority):
+    conn = create_connection('incident_management.db')  
     try:
         sql = '''INSERT INTO priority(priority_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
@@ -14,3 +14,7 @@ def create_priority(priority):
         return cur.lastrowid  # Return the ID of the newly created priority
     except Error as e:
         print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        print("Connection closed.")

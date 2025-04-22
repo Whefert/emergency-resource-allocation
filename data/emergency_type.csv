@@ -1,0 +1,8 @@
+emergency_type_id,name,description
+1,Fire,
+2,Theft,
+3,Flood,
+4,Vehicular Accident,
+5,Stabbing,
+6,Shooting,
+7,Sexual Assault,

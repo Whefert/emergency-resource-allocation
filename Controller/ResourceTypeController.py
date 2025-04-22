@@ -2,9 +2,10 @@ from database import create_connection
 import sqlite3
 from sqlite3 import Error
 
-conn = create_connection('incident_management.db')
+
 
 def create_resource_type_in_db(resource_type):
+    conn = create_connection('incident_management.db')
     try:
         sql = '''INSERT INTO resource_type(resource_type_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
@@ -19,6 +20,7 @@ def create_resource_type_in_db(resource_type):
         print("Connection closed.")
 
 def delete_resource_type_in_db(resource_type_id):
+    conn = create_connection('incident_management.db')
     try:
         sql = '''DELETE FROM resource_types WHERE resource_type_id=?'''
         cur = conn.cursor()
@@ -33,6 +35,7 @@ def delete_resource_type_in_db(resource_type_id):
         
 
 def update_resource_type_in_db(resource_type):
+    conn = create_connection('incident_management.db')
     try:
         sql = '''UPDATE resource_types SET name=?, description=? WHERE resource_type_id=?'''
         cur = conn.cursor()
@@ -46,6 +49,7 @@ def update_resource_type_in_db(resource_type):
         print("Connection closed.")
 
 def get_resource_type_by_id(resource_type_id):
+    conn = create_connection('incident_management.db')
     try:
         sql = '''SELECT * FROM resource_types WHERE resource_type_id=?'''
         cur = conn.cursor()
@@ -60,6 +64,7 @@ def get_resource_type_by_id(resource_type_id):
         print("Connection closed.")
 
 def get_all_resource_types():
+    conn = create_connection('incident_management.db')
     try:
         sql = '''SELECT * FROM resource_types'''
         cur = conn.cursor()
