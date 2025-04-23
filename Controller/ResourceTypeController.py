@@ -1,5 +1,4 @@
 from database import create_connection
-import sqlite3
 from sqlite3 import Error
 
 

@@ -3,6 +3,10 @@ from sqlite3 import Error
 from datetime import datetime
 import csv
 
+
+# TODO: Create a function to create the database separate from create the connec
+
+
 def create_connection(db_name):
     """ create a database connection to a SQLite database """
     conn = None
@@ -31,22 +35,13 @@ def create_connection(db_name):
         );
         """
 
-        # Create the resource types table if it doesn't exist
-        create_resource_types_table_sql = """
-        CREATE TABLE IF NOT EXISTS resource_types (
-            resource_type_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE,
-            description TEXT NOT NULL,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-        );
-        """
         # Create the resources table if it doesn't exist
         create_resource_table_sql = """
         CREATE TABLE IF NOT EXISTS resource (
             resource_id INTEGER PRIMARY KEY AUTOINCREMENT,
-            name TEXT NOT NULL UNIQUE,
-            description TEXT,
-            quantity INTEGER NOT NULL
+            resource_type_id INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (resource_type_id) REFERENCES resource_type (resource_type_id)
         );
         """
 
@@ -80,6 +75,21 @@ def create_connection(db_name):
         );
         """
 
+        # Create emergency type priority resource table if it doesn't exist
+        create_emergency_type_priority_resource_table_sql = """
+        CREATE TABLE IF NOT EXISTS emergency_type_priority_resource (
+            emergency_type_priority_resource_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            emergency_type_id INTEGER NOT NULL,
+            priority_id INTEGER NOT NULL,
+            recommended_resource_type_id INTEGER NOT NULL,
+            recommended_quantity INTEGER NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+            FOREIGN KEY (emergency_type_id) REFERENCES emergency_type (emergency_type_id),
+            FOREIGN KEY (priority_id) REFERENCES priority (priority_id),
+            FOREIGN KEY (recommended_resource_type_id) REFERENCES resource_type (resource_type_id)
+        );
+        """
+
         conn.execute(create_priority_table_sql)
         print("Property table created or already exists.")
 
@@ -92,6 +102,12 @@ def create_connection(db_name):
         conn.execute(create_location_table_sql)
         print("Location table created or already exists.")
 
+        conn.execute(create_emergency_type_priority_resource_table_sql)
+        print("Emergency type priority resource table created or already exists.")
+
+        conn.execute(create_resource_table_sql)
+        print("Resource table created or already exists.")
+
         # conn.execute(create_incident_table_sql)
         # print("Incident table created or already exists.")
 
@@ -101,8 +117,7 @@ def create_connection(db_name):
         # conn.execute(create_resource_types_table_sql)
         # print("Resource types table created or already exists.")
 
-        # conn.execute(create_resource_table_sql)
-        # print("Resources table created or already exists.")     
+  
 
 
         # Close the connection
