@@ -4,13 +4,10 @@ import inquirer
 from Controller.IncidentController import create_incident_in_db
 
 class Incident:
-    def __init__(self, description, priority, status,incident_id = None, required_resources=None, assigned_resources=None):
+    def __init__(self, incident_id, location, description):
         self.incident_id = incident_id # This will be auto-incremented by the database
-        self.priority = priority
-        self.required_resources = required_resources if required_resources is not None else []
-        self.assigned_resources = assigned_resources if assigned_resources is not None else []
+        self.location = location
         self.description = description
-        self.status = status
 
     @staticmethod
     def prompt_incident_data():
@@ -35,32 +32,30 @@ class Incident:
         print(f"Incident created with ID: {incident.get_incident_id()}")
 
    
-    # setters and getters for the incident attributes
-    def set_description(self, description):
-        self.description = description
+    # Getters and Setters
 
-    def get_description(self):
-        return self.description
-    
-    def set_priority(self, priority):
-        self.priority = priority
-    def get_priority(self):
-        return self.priority
-    
-    def set_status(self, status):
-        self.status = status
-    def get_status(self):
-        return self.status
-    
-    def set_incident_id(self, incident_id):
-        self.incident_id = incident_id
     def get_incident_id(self):
         return self.incident_id
     
-    def set_required_resources(self, required_resources):
-        self.required_resources = required_resources
-    def get_required_resources(self):
-        return self.required_resources
+    def get_location(self):
+        return self.location
+    
+    def get_description(self):
+        return self.description
+    
+    def set_incident_id(self, incident_id):
+        self.incident_id = incident_id
 
+    def set_location(self, location):
+        self.location = location
+    
+    def set_description(self, description):
+        self.description = description
+
+    # String representation of the object
+    def __str__(self):
+        return f"Incident(id={self.incident_id}, location={self.location}, description={self.description})"
+    
+    # Representation of the object for debugging
     def __repr__(self):
-        return f"Incident({self.incident_id}, {self.description}, {self.status})"
+        return f"Incident(incident_id={self.incident_id}, location={self.location}, description={self.description})"

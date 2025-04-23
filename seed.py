@@ -1,4 +1,3 @@
-from database import create_connection
 import csv
 from sqlite3 import Error
 from Controller.ResourceTypeController import create_resource_type_in_db, delete_resource_type_in_db, update_resource_type_in_db, get_resource_type_by_id, get_all_resource_types
@@ -13,7 +12,10 @@ from Model.EmergencyTypePriorityResource import EmergencyTypePriorityResource
 from Controller.EmergencyTypePriorityResourceController import create_emergency_type_priority_resource
 from Controller.ResourceController import create_resource
 from Model.Resource import Resource
-
+from Controller.IncidentEmergencyTypePriorityResourceController import create_incident_emergency_type_priority_resource
+from Model.IncidentEmergencyTypePriorityResource import IncidentEmergencyTypePriorityResource
+from Controller.IncidentController import create_incident_in_db
+from Model.Incident import Incident
 
 
 def seed_resource_types():
@@ -111,11 +113,41 @@ def seed_resource():
             for row in reader:
                 resource_id, resource_type_id = row
                 resource = Resource(resource_type_id, resource_id)
+                print(resource)
                 create_resource(resource)
                 print("Resource seeded successfully.")
     except Error as e:
         print(e)
 
+
+def seed_incident_emergency_type_priority_resource():
+    # Read the CSV file in the data folder and insert data into the incident_emergency_type_priority_resource table
+    # Assuming the CSV file has columns: name, description
+    try:
+        with open('./data/incident_emergency_type_priority_resource.csv', 'r') as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip the header row
+            for row in reader:
+                incident_emergency_type_priority_resource_id, incident_id, emergency_type_priority_resource_id = row
+                incident_emergency_type_priority_resource = IncidentEmergencyTypePriorityResource(incident_id, emergency_type_priority_resource_id, incident_emergency_type_priority_resource_id)
+                create_incident_emergency_type_priority_resource(incident_emergency_type_priority_resource)
+                print("Incident emergency type priority resource seeded successfully.")
+    except Error as e:
+        print(e)
+
+
+def seed_incident():
+    try:
+        with open('./data/incident.csv', 'r') as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip the header row
+            for row in reader:
+                incident_id, location, description = row
+                incident = Incident(incident_id, location, description)
+                create_incident_in_db(incident)
+                print("Incident seeded successfully.")
+    except Error as e:
+        print(e)
 
 
 seed_resource_types()
@@ -124,3 +156,5 @@ seed_emergency_type()
 seed_location()
 seed_emergency_type_priority_resource()
 seed_resource()
+seed_incident_emergency_type_priority_resource()
+seed_incident()

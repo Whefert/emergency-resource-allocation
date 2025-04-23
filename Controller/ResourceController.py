@@ -7,7 +7,7 @@ def create_resource(resource):
     try:
         sql = '''INSERT INTO resource(resource_id,resource_type_id) VALUES(?, ?)'''
         cur = conn.cursor()
-        cur.execute(sql, resource.get_resource_id(), resource.get_resource_type_id())   
+        cur.execute(sql, (resource.get_resource_id(), resource.get_resource_type_id()))   
         conn.commit()
         return cur.lastrowid  # Return the ID of the newly created resource type
     except Error as e:
