@@ -65,7 +65,7 @@ def get_location_by_id(location_id):
 def get_all_locations():
     try:
         conn = create_connection('incident_management.db')
-        sql = '''SELECT * FROM locations'''
+        sql = '''SELECT * FROM location'''
         cur = conn.cursor()
         cur.execute(sql)
         rows = cur.fetchall()

@@ -1,39 +1,34 @@
-import sqlite3
-from sqlite3 import Error
 import inquirer
-from Controller.IncidentController import create_incident_in_db
+from Controller.IncidentController import create_incident
+from Controller.LocationController import get_all_locations
+from Controller.PriorityController import get_all_priorities
+from Controller.StatusController import get_all_statuses
 
 class Incident:
-    def __init__(self, incident_id, location, description):
+    def __init__(self, location:int, description:str, status:int, incident_id:int=None):
+        self.status = status
         self.incident_id = incident_id # This will be auto-incremented by the database
         self.location = location
         self.description = description
+        self.resources = []  # This will hold the resources associated with the incident
 
     @staticmethod
     def prompt_incident_data():
-        # Get all locations from the database
-
         questions = [
+        # Create a list of tuples for inquirer
+            inquirer.List("location", message="Select incident location", choices=[(loc[1], loc[0]) for loc in get_all_locations()]),       
             inquirer.Text('description', message="Enter incident description"),
-            inquirer.List("location", message="Select incident location", choices=['Location1', 'Location2', 'Location3']),       
-            inquirer.List('priority', message="Select incident priority", choices=['Low', 'Medium', 'High']),
-            inquirer.List('status', message="Select incident status", choices=['Open', 'In Progress', 'Resolved'])
-        ]
+            inquirer.List('priority', message="Select incident priority", choices=[(pr[2], pr[0]) for pr in get_all_priorities()]),
+            inquirer.List('status', message="Select incident status", choices=[(st[1], st[0]) for st in get_all_statuses()]),   ]
         answers = inquirer.prompt(questions)
-        # Create a new incident object with the provided data
-        incident = Incident(
-            incident_id=None,  # This will be auto-incremented by the database
-            description=answers['description'],
-            priority=answers['priority'],
+        # Create the incident in the database
+        create_incident(Incident(
+            location=answers['location'],
+            description=answers['description'], 
             status=answers['status']
-        )
-        # Insert the incident into the database and get the incident ID
-        incident.set_incident_id(create_incident_in_db(incident))
-        print(f"Incident created with ID: {incident.get_incident_id()}")
+        ))
 
-   
     # Getters and Setters
-
     def get_incident_id(self):
         return self.incident_id
     
@@ -52,10 +47,21 @@ class Incident:
     def set_description(self, description):
         self.description = description
 
+    def set_status(self, status):
+        self.status = status
+
+    def get_status(self):
+        return self.status
+    
+    def set_resources(self, resources):
+        self.resources = resources
+
+    def get_resources(self):
+        return self.resources
+
     # String representation of the object
     def __str__(self):
-        return f"Incident(id={self.incident_id}, location={self.location}, description={self.description})"
-    
+        return f"Incident(incident_id={self.incident_id}, location={self.location}, description={self.description}, status={self.status})"    
     # Representation of the object for debugging
     def __repr__(self):
-        return f"Incident(incident_id={self.incident_id}, location={self.location}, description={self.description})"
+        return f"Incident(incident_id={self.incident_id}, location={self.location}, description={self.description}, status={self.status})"

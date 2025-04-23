@@ -1,0 +1,4 @@
+status_id,name,description
+1,Complete,Incident resolved
+2,In-Progress,Incident ongoing
+3,Unsure,Unclear as to resolution/continuation of incident

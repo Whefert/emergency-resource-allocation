@@ -114,6 +114,16 @@ def create_connection(db_name):
         );
         """
 
+        # Create status table if it doesn't exist
+        create_status_table_sql = """
+        CREATE TABLE IF NOT EXISTS status (
+            status_id INTEGER PRIMARY KEY AUTOINCREMENT,
+            name TEXT NOT NULL UNIQUE,
+            description TEXT NOT NULL,
+            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        );
+        """
+
         conn.execute(create_priority_table_sql)
         print("Property table created or already exists.")
 
@@ -138,6 +148,8 @@ def create_connection(db_name):
         conn.execute(create_incident_table_sql)
         print("Incident table created or already exists.")
 
+        conn.execute(create_status_table_sql)
+        print("Status table created or already exists.")
 
         conn.execute(create_incident_resource_table_sql)
         print("Incident resource table created or already exists.")

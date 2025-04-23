@@ -14,8 +14,10 @@ from Controller.ResourceController import create_resource
 from Model.Resource import Resource
 from Controller.IncidentEmergencyTypePriorityResourceController import create_incident_emergency_type_priority_resource
 from Model.IncidentEmergencyTypePriorityResource import IncidentEmergencyTypePriorityResource
-from Controller.IncidentController import create_incident_in_db
+from Controller.IncidentController import create_incident
 from Model.Incident import Incident
+from Controller.StatusController import create_status
+from Model.Status import Status
 
 
 def seed_resource_types():
@@ -69,7 +71,6 @@ def seed_emergency_type():
     except Error as e:
         print(e)
 
-
 def seed_location():
     # Read the CSV file in the data folder and insert data into the locations table
     # Assuming the CSV file has columns: name, description
@@ -86,7 +87,6 @@ def seed_location():
                 print("Location seeded successfully.")
     except Error as e:
         print(e)
-
 
 def seed_emergency_type_priority_resource():
     # Read the CSV file in the data folder and insert data into the emergency_type_priority_resource table
@@ -119,7 +119,6 @@ def seed_resource():
     except Error as e:
         print(e)
 
-
 def seed_incident_emergency_type_priority_resource():
     # Read the CSV file in the data folder and insert data into the incident_emergency_type_priority_resource table
     # Assuming the CSV file has columns: name, description
@@ -135,26 +134,43 @@ def seed_incident_emergency_type_priority_resource():
     except Error as e:
         print(e)
 
-
 def seed_incident():
     try:
         with open('./data/incident.csv', 'r') as file:
             reader = csv.reader(file)
             next(reader)  # Skip the header row
             for row in reader:
-                incident_id, location, description = row
-                incident = Incident(incident_id, location, description)
-                create_incident_in_db(incident)
+                incident_id, location, description, status = row
+                incident = Incident(incident_id, location, description, status)
+                create_incident(incident)
                 print("Incident seeded successfully.")
     except Error as e:
         print(e)
 
+def seed_status():
+    # Read the CSV file in the data folder and insert data into the status table
+    # Assuming the CSV file has columns: name, description
+    try:
+        with open('./data/status.csv', 'r') as file:
+            reader = csv.reader(file)
+            next(reader)  # Skip the header row
+            for row in reader:
+                status_id, name, description = row
+                status = Status(name, description, status_id)
+                create_status(status)
+                print("Status seeded successfully.")
+    except Error as e:
+        print(e)
 
-seed_resource_types()
-seed_priority()
-seed_emergency_type()
-seed_location()
-seed_emergency_type_priority_resource()
-seed_resource()
-seed_incident_emergency_type_priority_resource()
-seed_incident()
+
+def seed_db():
+    # Seed the database with initial data
+    seed_resource_types()
+    seed_priority()
+    seed_emergency_type()
+    seed_location()
+    seed_emergency_type_priority_resource()
+    seed_resource()
+    seed_incident_emergency_type_priority_resource()
+    seed_incident()
+    seed_status()
