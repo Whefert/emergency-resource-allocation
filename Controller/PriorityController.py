@@ -16,7 +16,7 @@ def create_priority(priority):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+        
 
 
 def get_all_priorities():
@@ -32,4 +32,4 @@ def get_all_priorities():
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+        

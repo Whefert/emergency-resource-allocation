@@ -16,7 +16,7 @@ def create_resource_type_in_db(resource_type):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def delete_resource_type_in_db(resource_type_id):
     conn = create_connection('incident_management.db')
@@ -30,7 +30,7 @@ def delete_resource_type_in_db(resource_type_id):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
         
 
 def update_resource_type_in_db(resource_type):
@@ -45,22 +45,22 @@ def update_resource_type_in_db(resource_type):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def get_resource_type_by_id(resource_type_id):
     conn = create_connection('incident_management.db')
     try:
-        sql = '''SELECT * FROM resource_types WHERE resource_type_id=?'''
+        sql = '''SELECT * FROM resource_type WHERE resource_type_id=?'''
         cur = conn.cursor()
         cur.execute(sql, (resource_type_id,))
-        rows = cur.fetchall()
-        return rows
+        row = cur.fetchone()
+        return row
     except Error as e:
         print(e)
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def get_all_resource_types():
     conn = create_connection('incident_management.db')
@@ -75,5 +75,5 @@ def get_all_resource_types():
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 

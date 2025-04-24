@@ -15,7 +15,7 @@ def create_status(status):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+        
 
 
 
@@ -32,4 +32,20 @@ def get_all_statuses():
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+        
+
+
+def get_status_by_id(status_id):
+    try:
+        conn = create_connection('incident_management.db')
+        sql = '''SELECT * FROM status WHERE status_id = ?'''
+        cur = conn.cursor()
+        cur.execute(sql, (status_id,))
+        row = cur.fetchone()
+        return row
+    except Error as e:
+        print(e)
+    finally:
+        # Close the connection
+        conn.close()
+        

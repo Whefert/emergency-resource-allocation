@@ -1,7 +1,7 @@
 from seed import seed_db
-from Model.Incident import Incident
 from functions import main_menu
-from Controller.IncidentController import get_all_incidents
+
+from Model.Incident import Incident
 
 def main():
     seed_db()
@@ -14,19 +14,16 @@ def main():
             Incident.prompt_incident_data()
         elif choice == '2':
             # View incidents
-            incidents = get_all_incidents()
-            if incidents:
-                print("Incidents:")
-                for incident in incidents:
-                    print(incident) # Assuming __str__ method is implemented in Incident class
-            else:
-                print("No incidents found.")
+            Incident.show_all_incidents()
+          # 
         elif choice == '3':
             # Update an incident
-            Incident.update_incident()
+            return
+            # Incident.update_incident()
         elif choice == '4':
+            return
             # Delete an incident
-            Incident.delete_incident()
+            # Incident.delete_incident()
         else:
             print("Invalid choice. Please try again.")
 

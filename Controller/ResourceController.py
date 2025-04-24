@@ -15,4 +15,4 @@ def create_resource(resource):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+        

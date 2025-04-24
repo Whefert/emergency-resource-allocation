@@ -17,7 +17,7 @@ def create_location(location):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def delete_location_in_db(location_id):
     try:
@@ -31,12 +31,12 @@ def delete_location_in_db(location_id):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def update_location_in_db(location):
     try:
         conn = create_connection('incident_management.db')
-        sql = '''UPDATE locations SET zone=?, x_coordinate=?, y_coordinate=? WHERE location_id=?'''
+        sql = '''UPDATE location SET zone=?, x_coordinate=?, y_coordinate=? WHERE location_id=?'''
         cur = conn.cursor()
         cur.execute(sql, (location.get_zone(), location.get_x_coordinate(), location.get_y_coordinate(), location.get_location_id()))
         conn.commit()
@@ -45,22 +45,25 @@ def update_location_in_db(location):
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def get_location_by_id(location_id):
+    if location_id is None:
+        return None
+
     try:
         conn = create_connection('incident_management.db')
-        sql = '''SELECT * FROM locations WHERE location_id=?'''
+        sql = '''SELECT * FROM location WHERE location_id=?'''
         cur = conn.cursor()
         cur.execute(sql, (location_id,))
-        rows = cur.fetchall()
-        return rows
+        row = cur.fetchone()
+        return row
     except Error as e:
         print(e)
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
 
 def get_all_locations():
     try:
@@ -75,4 +78,4 @@ def get_all_locations():
     finally:
         # Close the connection
         conn.close()
-        print("Connection closed.")
+       
