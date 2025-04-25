@@ -3,8 +3,16 @@ from sqlite3 import Error
 
 
 def create_resource(resource):
-    conn = create_connection('incident_management.db')
     try:
+        conn = create_connection('incident_management.db')  
+        # Check if the resource already exists in the database
+        sql_check = '''SELECT * FROM resource WHERE resource_id=? AND resource_type_id=?'''
+        cur_check = conn.cursor()
+        cur_check.execute(sql_check, (resource.get_resource_id(), resource.get_resource_type_id()))
+        row = cur_check.fetchone()
+        if row:
+            return None # Resource already exists, return None or handle as needed
+
         sql = '''INSERT INTO resource(resource_id,resource_type_id) VALUES(?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (resource.get_resource_id(), resource.get_resource_type_id()))   

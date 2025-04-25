@@ -53,7 +53,8 @@ def seed_priority():
                 priority = Priority(name, description, priority_id)
                 create_priority(priority)
     except Error as e:
-        print(e)
+        pass
+        # print(e)
 
 def seed_emergency_type():
     # Read the CSV file in the data folder and insert data into the emergency_types table
@@ -69,8 +70,9 @@ def seed_emergency_type():
                 emergency_type = EmergencyType(name, description, emergency_type_id)
                 create_emergency_type(emergency_type)
     except Error as e:
-        print(e)
-
+        pass
+        # print(e)
+ 
 def seed_location():
     # Read the CSV file in the data folder and insert data into the locations table
     # Assuming the CSV file has columns: name, description
@@ -171,9 +173,9 @@ def seed_status():
                 status_id, name, description = row
                 status = Status(name, description, status_id)
                 create_status(status)
-      
+   
     except Error as e:
-        print(e)
+       pass
 
 
 def seed_db():

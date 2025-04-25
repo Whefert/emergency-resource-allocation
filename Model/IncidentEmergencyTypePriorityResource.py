@@ -1,6 +1,6 @@
 class IncidentEmergencyTypePriorityResource:
 
-    def __init__(self, incident_id, emergency_type_priority_resource_id:int, incident_emergency_type_priority_resource_id:int=None):
+    def __init__(self, incident_id, emergency_type_priority_resource_id:int):
         self.incident_id = incident_id
         self.emergency_type_priority_resource_id = emergency_type_priority_resource_id
 

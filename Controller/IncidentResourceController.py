@@ -4,6 +4,15 @@ from sqlite3 import Error
 def create_incident_resource(incident_resource):
     try:
         conn = create_connection('incident_management.db')
+        # Check if the incident_resource already exists in the database
+        sql_check = '''SELECT * FROM incident_resource WHERE incident=? AND resource=?'''
+        cur_check = conn.cursor()
+        cur_check.execute(sql_check, (incident_resource.get_incident(), incident_resource.get_resource()))
+        row = cur_check.fetchone()
+        if row:
+            return None # Incident resource already exists, return None or handle as needed
+
+
         sql = '''INSERT INTO incident_resource( incident, resource) VALUES(?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (incident_resource.get_incident(), incident_resource.get_resource()))
@@ -83,42 +92,14 @@ def get_incident_resource_by_resouce_id(incident_resource_id):
         # Close the connection
         conn.close()
       
-
 # Get all the resources for a specific incident
-# Assuming the incident_resource table has a foreign key relationship with the incident table
-# and the resource table
 def get_resources_by_incident_id(incident_id):
     try:
         conn = create_connection('incident_management.db')
-
-        # Get the count of resources for each incident
-    # sql = '''SELECT incident_resource.incident as incident_id,
-    # COUNT(resource_type.resource_type_id) AS resource_count, resource_type.name
-    # FROM incident_resource
-    # LEFT JOIN resource ON incident_resource.resource = resource.resource_id
-    # LEFT JOIN resource_type ON resource.resource_type_id = resource_type.resource_type_id
-    # WHERE incident_resource.incident = ?
-    # GROUP BY incident_resource.incident, resource_type.name'''
-
-
-
-#     WITH tempTable AS (
-# 	SELECT incident_resource.incident as incident_id, 
-# 	incident_resource.resource, 
-# 	resource.resource_type_id as rtid
-# 	FROM incident_resource 
-# 	LEFT JOIN 
-# 	resource ON incident_resource.resource = resource.resource_id
-# ) SELECT tempTable.incident_id, COUNT(resource_type.resource_type_id) AS resource_count, resource_type.name
-# FROM resource_type
-# LEFT JOIN tempTable ON tempTable.rtid = resource_type.resource_type_id
-# GROUP BY tempTable.incident_id,
-# resource_type.name
-
-
-        sql = '''SELECT incident_resource.resource, resource.resource_type_id
+        sql = '''SELECT incident_resource.resource, resource.resource_type_id, resource_type.name
                  FROM incident_resource 
                  LEFT JOIN resource ON incident_resource.resource = resource.resource_id
+                 LEFT JOIN resource_type ON resource.resource_type_id = resource_type.resource_type_id
                  WHERE incident_resource.incident = ?        
                  '''
     
@@ -132,6 +113,8 @@ def get_resources_by_incident_id(incident_id):
         # Close the connection
         conn.close()
       
+
+# def get_resources_by_incident_id(incident_id):
 
 
 def get_resource_name_and_count_by_incident_id(incident_id):
@@ -154,3 +137,66 @@ def get_resource_name_and_count_by_incident_id(incident_id):
         # Close the connection
         conn.close()
       
+def add_resource_to_incident(incident_id, resource_id):
+    try:
+        conn = create_connection('incident_management.db')
+        sql = '''INSERT INTO incident_resource(incident, resource) VALUES(?, ?)'''
+        cur = conn.cursor()
+        cur.execute(sql, (incident_id, resource_id))
+        conn.commit()
+    except Error as e:
+        print(e)
+    finally:
+        # Close the connection
+        conn.close()
+
+def remove_resource_from_incident(incident_id, resource_id):
+    try:
+        conn = create_connection('incident_management.db')
+        sql = '''DELETE FROM incident_resource WHERE incident=? AND resource=?'''
+        cur = conn.cursor()
+        cur.execute(sql, (incident_id, resource_id))
+        conn.commit()
+    except Error as e:
+        print(e)
+    finally:
+        # Close the connection
+        conn.close()
+
+
+
+def get_available_resources_by_type(resource_type_id):
+
+    try:
+        conn = create_connection('incident_management.db')
+        sql = '''SELECT resource.resource_id, resource.resource_type_id
+                 FROM resource 
+                 WHERE resource.resource_type_id = ? AND resource.resource_id NOT IN (SELECT incident_resource.resource FROM incident_resource)'''
+    
+        cur = conn.cursor()
+        cur.execute(sql, (resource_type_id,))
+        rows = cur.fetchall()
+        return rows
+    except Error as e:
+        print(e)
+    finally:
+        # Close the connection
+        conn.close()
+
+def get_all_available_resources():
+    try:
+        conn = create_connection('incident_management.db')
+        sql = '''SELECT resource.resource_id, resource.resource_type_id, resource_type.name
+                    FROM resource 
+                    LEFT JOIN resource_type ON resource.resource_type_id = resource_type.resource_type_id
+                    WHERE resource.resource_id NOT IN (SELECT incident_resource.resource FROM incident_resource)'''
+    
+        cur = conn.cursor()
+        cur.execute(sql)
+        rows = cur.fetchall()
+        return rows
+    except Error as e:
+        print(e)
+    finally:
+        # Close the connection
+        conn.close()

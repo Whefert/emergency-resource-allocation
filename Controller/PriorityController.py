@@ -6,6 +6,14 @@ from database import create_connection
 def create_priority(priority):
     conn = create_connection('incident_management.db')  
     try:
+        # Check if the priority already exists
+        sql_check = '''SELECT * FROM priority WHERE priority_id = ?'''
+        cur = conn.cursor()
+        cur.execute(sql_check, (priority.get_priority_id(),))
+        row = cur.fetchone()
+        if row:
+            return None  # Priority already exists, return None
+
         sql = '''INSERT INTO priority(priority_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (priority.get_priority_id(), priority.get_name(), priority.get_description()))

@@ -14,8 +14,7 @@ def create_emergency_type(emergency_type):
         cur.execute(sql_check, (emergency_type.get_emergency_type_id(),))
         row = cur.fetchone()
         if row:
-            print("Emergency type already exists.")
-            return None
+            return None # Emergency type already exists, return None
         # If it doesn't exist, insert the new emergency type
 
         sql = '''INSERT INTO emergency_type(emergency_type_id, name, description) VALUES(?, ?, ?)'''

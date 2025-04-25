@@ -5,6 +5,15 @@ from sqlite3 import Error
 def create_status(status):
     try:
         conn = create_connection('incident_management.db')
+
+        # Check if the status already exists in the database
+        sql_check = '''SELECT * FROM status WHERE status_id=?'''
+        cur_check = conn.cursor()
+        cur_check.execute(sql_check, (status.get_status_id(),))
+        row = cur_check.fetchone()
+        if row:
+            return None # Status already exists, return None or handle as needed
+
         sql = '''INSERT INTO status(status_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (status.get_status_id(), status.get_name(), status.get_description()))

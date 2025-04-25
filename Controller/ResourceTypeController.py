@@ -6,6 +6,14 @@ from sqlite3 import Error
 def create_resource_type_in_db(resource_type):
     conn = create_connection('incident_management.db')
     try:
+        # Check if the resource type already exists
+        sql_check = '''SELECT * FROM resource_type WHERE resource_type_id = ?'''
+        cur = conn.cursor()
+        cur.execute(sql_check, (resource_type.get_resource_type_id(),))
+        row = cur.fetchone()
+        if row:
+            return None  # Resource type already exists, return None
+
         sql = '''INSERT INTO resource_type(resource_type_id, name, description) VALUES(?, ?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (resource_type.get_resource_type_id(), resource_type.get_name(), resource_type.get_description()))
@@ -65,7 +73,7 @@ def get_resource_type_by_id(resource_type_id):
 def get_all_resource_types():
     conn = create_connection('incident_management.db')
     try:
-        sql = '''SELECT * FROM resource_types'''
+        sql = '''SELECT * FROM resource_type'''
         cur = conn.cursor()
         cur.execute(sql)
         rows = cur.fetchall()

@@ -7,6 +7,17 @@ from database import create_connection
 def create_location(location):
     try:
         conn = create_connection('incident_management.db')
+        
+        # Check if the location already exists in the database
+        sql_check = '''SELECT * FROM location WHERE location_id=?'''
+        cur_check = conn.cursor()
+        cur_check.execute(sql_check, (location.get_location_id(),))
+        row = cur_check.fetchone()
+        if row:
+            return None  # Location already exists, return None or handle as needed
+
+        
+        
         sql = '''INSERT INTO location(location_id, zone, x_coordinate, y_coordinate) VALUES(?, ?, ?, ?)'''
         cur = conn.cursor()
         cur.execute(sql, (location.get_location_id(), location.get_zone(), location.get_x_coordinate(), location.get_y_coordinate()))   
